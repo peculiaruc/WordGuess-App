@@ -52,12 +52,12 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="40" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/play_again_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:onClick="@{() -> scoreViewModel.playAgainButton()"
+            android:onClick="@{() -> scoreViewModel.playedAgain()"
             android:text="@string/play_again"
             android:theme="@style/GoButton"
             app:layout_constraintBottom_toBottomOf="parent"
