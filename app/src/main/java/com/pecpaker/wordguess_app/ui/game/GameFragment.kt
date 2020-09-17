@@ -1,6 +1,7 @@
 package com.pecpaker.wordguess_app.ui.game
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -44,38 +45,32 @@ class GameFragment : Fragment() {
 
         //implement databinding with xml and viewModel
         binding.gameViewModel = viewModel
+        binding.setLifecycleOwner(this)
 
         //Observe the LiveData that is set up LiveData Observation relationship
 
-        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
-            binding.scoreText.text = newScore.toString()
-        })
-
-        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
-            binding.wordText.text = newWord
-        })
-
-        viewModel.gameFinished.observe(viewLifecycleOwner, Observer { hasFinished ->
-            if (hasFinished) {
-                gameFinished()
+        viewModel.gameFinished.observe(viewLifecycleOwner, Observer { isFinished ->
+            if (isFinished) {
+                //  gameFinished()
+                val action = GameFragmentDirections.actionGameToScore()
+                val currentScore = viewModel.score.value ?: 0
+                action.setScore(currentScore)
+                findNavController().navigate(action)
                 viewModel.onGameFinishedCompleted()
             }
         })
-
-        viewModel.currentTime.observe(viewLifecycleOwner, Observer { currentTime ->
-        })
+//        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
+//            binding.timerText.text = DateUtils.formatElapsedTime(newTime)
+//        })
         return binding.root
     }
 
     /**
      * Called when the game is finished
      */
-    private fun gameFinished() {
-        val action = GameFragmentDirections.actionGameToScore()
-        val currentScore = viewModel.score.value ?: 0
-        action.setScore(currentScore)
-        findNavController().navigate(action)
-
-    }
+//    private fun gameFinished() {
+//
+//
+//    }
 
 }
