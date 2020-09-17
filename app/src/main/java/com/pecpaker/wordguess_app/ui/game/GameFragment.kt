@@ -42,11 +42,8 @@ class GameFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
+        //implement databinding with xml and viewModel
         binding.gameViewModel = viewModel
-
-        binding.correctButton.setOnClickListener { viewModel.onCorrect() }
-
-        binding.skipButton.setOnClickListener { viewModel.onSkip() }
 
         //Observe the LiveData that is set up LiveData Observation relationship
 

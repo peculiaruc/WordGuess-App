@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -34,24 +35,28 @@ class ScoreFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val binding: FragmentScoreBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_score, container, false)
 
-        //   viewModelFactory = ScoreViewModelFactory(ScoreFragmentArgs.fromBundle(arguments).score)
+        viewModelFactory =
+            ScoreViewModelFactory(ScoreFragmentArgs.fromBundle(requireArguments()).score)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ScoreViewModel::class.java)
 
         // Get args using by navArgs property delegate
-        val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
+        binding.scoreViewModel = viewModel
+        binding.lifecycleOwner = this
 
-        //    binding.scoreText.text = ScoreFragmentArgs.fromBundle(arguments).score.toString()
-        binding.playAgainButton.setOnClickListener { onPlayAgain() }
+        viewModel.payAgainButton.observe(viewLifecycleOwner, Observer { hasPlayedAgain ->
+
+            if (hasPlayedAgain) {
+                findNavController().navigate(ScoreFragmentDirections.actionRestart())
+                viewModel.onPlayAgainComplete()
+            }
+        })
 
         return binding.root
-    }
-
-    private fun onPlayAgain() {
-        findNavController().navigate(ScoreFragmentDirections.actionRestart())
     }
 
 }
