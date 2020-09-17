@@ -11,7 +11,6 @@ import androidx.navigation.fragment.navArgs
 import com.pecpaker.wordguess_app.R
 import com.pecpaker.wordguess_app.databinding.FragmentTitleBinding
 
-
 /**
  * A simple [Fragment] subclass.
  * Use the [TitleFragment.newInstance] factory method to
@@ -23,7 +22,6 @@ class TitleFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(

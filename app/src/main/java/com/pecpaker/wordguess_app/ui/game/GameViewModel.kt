@@ -1,8 +1,11 @@
 package com.pecpaker.wordguess_app.ui.game
 
+import android.os.CountDownTimer
+import android.text.format.DateUtils
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 
 class GameViewModel : ViewModel() {
@@ -20,6 +23,17 @@ class GameViewModel : ViewModel() {
         private const val COUNTDOWN_TIME = 10000L
     }
 
+    private var timer: CountDownTimer
+
+    //TIMER
+
+    val currentTime: LiveData<Long>
+        get() = _currentTime
+
+    private var _currentTime = MutableLiveData<Long>()
+    val currentTimes = Transformations.map(currentTime) { time ->
+        DateUtils.formatElapsedTime(time)
+    }
 
     // The current word
     private val _word = MutableLiveData<String>()
@@ -31,9 +45,9 @@ class GameViewModel : ViewModel() {
     val score: LiveData<Int>
         get() = _score
 
-    private val _eventgameFinished = MutableLiveData<Boolean>()
+    private val _gameFinished = MutableLiveData<Boolean>()
     val gameFinished: LiveData<Boolean>
-        get() = _eventgameFinished
+        get() = _gameFinished
 
 
     // The list of words - the front of the list is the next word to guess
@@ -45,7 +59,21 @@ class GameViewModel : ViewModel() {
         nextWord()
         _score.value = 0
         _word.value = ""
-        _eventgameFinished.value = false
+        _gameFinished.value = false
+
+        timer = object : CountDownTimer(COUNTDOWN_TIME, ONE_SECOND) {
+
+            override fun onTick(millisUntiFinished: Long) {
+                _currentTime.value = millisUntiFinished / ONE_SECOND
+                //     if (millisUntiFinished / ONE_SECOND <= COUNTDOWN_PANIC_SECOND)
+            }
+
+            override fun onFinish() {
+                _currentTime.value = Done
+                _gameFinished.value = true
+            }
+        }
+        timer.start()
     }
 
     /**
@@ -68,7 +96,7 @@ class GameViewModel : ViewModel() {
         //Select and remove a word from the list
         if (wordList.isEmpty()) {
             resetList()
-            _eventgameFinished.value = true
+            _gameFinished.value = true
         }
         _word.value = wordList.removeAt(0)
     }
@@ -86,7 +114,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun onGameFinishedCompleted() {
-        _eventgameFinished.value = false
+        _gameFinished.value = false
     }
 
     override fun onCleared() {
