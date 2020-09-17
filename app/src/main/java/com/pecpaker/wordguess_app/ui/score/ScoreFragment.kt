@@ -49,7 +49,6 @@ class ScoreFragment : Fragment() {
         binding.lifecycleOwner = this
 
         viewModel.payAgainButton.observe(viewLifecycleOwner, Observer { hasPlayedAgain ->
-
             if (hasPlayedAgain) {
                 findNavController().navigate(ScoreFragmentDirections.actionRestart())
                 viewModel.onPlayAgainComplete()

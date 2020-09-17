@@ -29,9 +29,9 @@ class ScoreViewModel(finalScore: Int) : ViewModel() {
         _playAgainBtton.value = false
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Log.i("ScoreViewModel", "scoreViewModel is called")
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        Log.i("ScoreViewModel", "scoreViewModel is called")
+//    }
 
 }
